@@ -1,49 +1,39 @@
-<script lang="ts">
-	import Counter from '$lib/Counter.svelte';
+<script context="module">
+	import Client from './../../utils/client';
+	import PrismicDom from 'prismic-dom';
+
+	export async function load() {
+		const document = await Client.getByUID('page', 'homepage', {});
+		return {
+			props: {
+				document
+			}
+		};
+	}
 </script>
 
-<svelte:head>
-	<title>Hello world!</title>
-</svelte:head>
+<script>
+	export let document;
+</script>
 
 <main>
-	<h1>Hello world!</h1>
-
-	<Counter />
-
-	<p>Visit <a href="https://svelte.dev">svelte.dev</a> to learn how to build Svelte apps.</p>
+	<div class="header container" style="background-image: url('{document.data.image.url}')">
+		<h1>{document.data.title}</h1>
+	</div>
+	<div class="container">
+		<div class="text">
+			{@html PrismicDom.RichText.asHtml(document.data.content)}
+		</div>
+	</div>
 </main>
 
+<!--  -->
 <style>
-	main {
-		text-align: center;
-		padding: 1em;
-		margin: 0 auto;
-	}
-
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4rem;
-		font-weight: 100;
-		line-height: 1.1;
-		margin: 4rem auto;
-		max-width: 14rem;
-	}
-
-	p {
-		max-width: 14rem;
-		margin: 2rem auto;
-		line-height: 1.35;
-	}
-
-	@media (min-width: 480px) {
-		h1 {
-			max-width: none;
-		}
-
-		p {
-			max-width: none;
-		}
+	.header {
+		color: white;
+		background-size: cover;
+		min-height: 25vw;
+		padding-top: 2rem;
+		justify-content: flex-end;
 	}
 </style>
